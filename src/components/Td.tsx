@@ -69,10 +69,26 @@ const Td = ({ tableData, row, cell }: any) => {
     }
   };
 
+  const mouseDown = (e: any) => {
+    if (e.button === 0) {
+      if (e.type === 'mousedown') {
+        e.target.style.backgroundPosition = '0 -23px';
+      } else if (e.type === 'mouseup') {
+        e.target.style.backgroundPosition = '';
+        handleClick();
+      } else if (e.type === 'mouseout') {
+        e.target.style.backgroundPosition = '';
+      }
+    }
+  };
+
   return (
     <StyledTd
       currentCell={tableData[row][cell]}
       onClick={handleClick}
+      onMouseDown={mouseDown}
+      onMouseUp={mouseDown}
+      onMouseOut={mouseDown}
       onContextMenu={handleRightClick}
     >
       {tableData[row][cell]}
@@ -121,14 +137,4 @@ const StyledTd = styled.div<StyleProps>`
   text-indent: -9999px; // text 숨기기
   width: 16px;
   height: 16px;
-  &:active {
-    background-position: ${({ currentCell }) => {
-      switch (currentCell) {
-        case 0:
-        case -5:
-          return '0 -23px';
-      }
-    }};
-  }
-  /* border: 1px solid white; */
 `;
