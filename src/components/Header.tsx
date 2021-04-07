@@ -1,28 +1,56 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
+import { actionCreator } from 'redux/mineReducer';
+import { RootState } from 'redux/store';
 
 interface Props {}
 
 const Header = (props: Props) => {
-  const [mineCount, setMineCount] = useState(99);
   const [timeUp, setTimeUp] = useState(0);
+
+  const dispatch = useDispatch();
+  const { isStart, mineCount } = useSelector((state: RootState) => state.MineReducer);
+  const { CreateTable, SwitchStart } = actionCreator;
+
+  let timer: any = null;
+  useEffect(() => {
+    if (isStart) {
+      timer = setInterval(() => {
+        setTimeUp(prev => prev + 1);
+      }, 1000);
+    } else {
+      clearInterval(timer);
+    }
+    if (timeUp === 9) {
+      clearInterval(timer);
+    }
+    return () => {
+      clearInterval(timer);
+    };
+  }, [isStart, timeUp]);
 
   const changeImage = (item: number) => {
     const answer = [];
     const split = String(item).split('');
-    console.log(split);
     for (let i = String(item).length; 3 > i; i++) {
-      answer.push(<div className="time time0"></div>);
+      answer.push(<div key={i} className="time time0"></div>);
     }
     for (let i = 0; split.length > i; i++) {
-      answer.push(<div className={`time time${split[i]}`}></div>);
+      answer.push(<div key={i} className={`time time${split[i]}`}></div>);
     }
     return answer;
   };
 
   const handleSmile = () => {
-    setMineCount(99);
     setTimeUp(0);
+    dispatch(SwitchStart(false));
+    dispatch(
+      CreateTable({
+        row: 16,
+        cell: 30,
+      }),
+    );
   };
 
   return (

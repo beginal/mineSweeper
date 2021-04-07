@@ -16,7 +16,10 @@ export default App;
 
 const StyledWrap = styled.div`
   padding: 6px;
+  border: 2px solid white;
   border-right: 2px solid #7b7b7b;
-  width: 500px;
+  border-bottom: 2px solid #7b7b7b;
+  width: 484px;
   background: #c0c0c0;
+  user-select: none;
 `;
