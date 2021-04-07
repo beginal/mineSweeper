@@ -69,15 +69,21 @@ const Td = ({ tableData, row, cell }: any) => {
     }
   };
 
-  const mouseDown = (e: any) => {
-    if (e.button === 0) {
-      if (e.type === 'mousedown') {
-        e.target.style.backgroundPosition = '0 -23px';
-      } else if (e.type === 'mouseup') {
-        e.target.style.backgroundPosition = '';
-        handleClick();
-      } else if (e.type === 'mouseout') {
-        e.target.style.backgroundPosition = '';
+  const mouseEvnet = (e: any) => {
+    if (!gameOver) {
+      if (e.button === 0) {
+        if (e.type === 'mousedown') {
+          e.target.style.backgroundPosition = '0 -23px';
+        } else if (e.type === 'mouseup') {
+          e.target.style.backgroundPosition = '';
+          handleClick();
+        }
+      } else if (e.button === 1) {
+        if (e.type === 'mousedown') {
+          e.target.style.backgroundPosition = '0 -23px';
+        } else if (e.type === 'mouseup') {
+          e.target.style.backgroundPosition = '';
+        }
       }
     }
   };
@@ -86,9 +92,8 @@ const Td = ({ tableData, row, cell }: any) => {
     <StyledTd
       currentCell={tableData[row][cell]}
       onClick={handleClick}
-      onMouseDown={mouseDown}
-      onMouseUp={mouseDown}
-      onMouseOut={mouseDown}
+      onMouseDown={mouseEvnet}
+      onMouseUp={mouseEvnet}
       onContextMenu={handleRightClick}
     >
       {tableData[row][cell]}
