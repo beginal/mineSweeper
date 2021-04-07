@@ -21,10 +21,6 @@ const Table = (props: Props) => {
     );
   }, []);
 
-  useEffect(() => {
-    console.log(tableData);
-  }, [tableData]);
-
   return (
     <StyledWrap>
       {tableData.map((tr: any, i: any) => (

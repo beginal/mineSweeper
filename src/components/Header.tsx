@@ -10,8 +10,8 @@ const Header = (props: Props) => {
   const [timeUp, setTimeUp] = useState(0);
 
   const dispatch = useDispatch();
-  const { isStart, mineCount } = useSelector((state: RootState) => state.MineReducer);
-  const { CreateTable, SwitchStart } = actionCreator;
+  const { isStart, mineCount, gameOver } = useSelector((state: RootState) => state.MineReducer);
+  const { CreateTable, SwitchStart, SetGameOver } = actionCreator;
 
   let timer: any = null;
   useEffect(() => {
@@ -22,7 +22,7 @@ const Header = (props: Props) => {
     } else {
       clearInterval(timer);
     }
-    if (timeUp === 9) {
+    if (timeUp === 999) {
       clearInterval(timer);
     }
     return () => {
@@ -45,6 +45,7 @@ const Header = (props: Props) => {
   const handleSmile = () => {
     setTimeUp(0);
     dispatch(SwitchStart(false));
+    dispatch(SetGameOver(false));
     dispatch(
       CreateTable({
         row: 16,
@@ -54,7 +55,7 @@ const Header = (props: Props) => {
   };
 
   return (
-    <StyleWrap>
+    <StyleWrap gameOver={gameOver}>
       <div className="timeList">{changeImage(mineCount)}</div>
       <button className="smileBtn" onClick={handleSmile}></button>
       <div className="timeList">{changeImage(timeUp)}</div>
@@ -64,7 +65,11 @@ const Header = (props: Props) => {
 
 export default Header;
 
-const StyleWrap = styled.div`
+interface StyleProps {
+  gameOver: boolean;
+}
+
+const StyleWrap = styled.div<StyleProps>`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -76,7 +81,7 @@ const StyleWrap = styled.div`
     display: flex;
     justify-content: center;
     background-image: url('./sprite100.gif');
-    background-position: 0 -55px;
+    background-position: ${({ gameOver }) => (gameOver ? '-78px -55px' : '0 -55px')};
     width: 26px;
     height: 26px;
     cursor: pointer;

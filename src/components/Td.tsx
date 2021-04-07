@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { actionCreator } from 'redux/mineReducer';
@@ -8,8 +8,8 @@ interface Props {}
 
 const Td = ({ tableData, row, cell }: any) => {
   const dispatch = useDispatch();
-  const { isStart } = useSelector((state: RootState) => state.MineReducer);
-  const { SwitchStart, MineInstall, ChangeTableCell } = actionCreator;
+  const { isStart, gameOver } = useSelector((state: RootState) => state.MineReducer);
+  const { SwitchStart, MineInstall, ChangeTableCell, SetGameOver } = actionCreator;
   const isState = {
     normal: 0,
     openNormal: -1,
@@ -20,29 +20,32 @@ const Td = ({ tableData, row, cell }: any) => {
   };
 
   const handleClick = () => {
-    if (!isStart) {
-      dispatch(
-        MineInstall({
-          row,
-          cell,
-          mineInstall: isState.mine,
-        }),
-      );
-      dispatch(SwitchStart(true));
-    }
-    switch (tableData[row][cell]) {
-      case isState.openNormal:
-      case isState.flag:
-      case isState.flagMine:
-        return;
-      case isState.normal:
-        dispatch(ChangeTableCell({ row, cell, data: isState.openNormal }));
-        return;
-      case isState.mine:
-        dispatch(ChangeTableCell({ row, cell, data: isState.openMine }));
-        return;
-      default:
-        return;
+    if (!gameOver) {
+      if (!isStart) {
+        dispatch(
+          MineInstall({
+            row,
+            cell,
+            mineInstall: isState.mine,
+          }),
+        );
+        dispatch(SwitchStart(true));
+      }
+      switch (tableData[row][cell]) {
+        case isState.openNormal:
+        case isState.flag:
+        case isState.flagMine:
+          return;
+        case isState.normal:
+          dispatch(ChangeTableCell({ row, cell, data: isState.openNormal }));
+          return;
+        case isState.mine:
+          dispatch(ChangeTableCell({ row, cell, data: isState.openMine }));
+          dispatch(SetGameOver(true));
+          return;
+        default:
+          return;
+      }
     }
   };
 
@@ -90,17 +93,42 @@ const StyledTd = styled.div<StyleProps>`
       case 0:
       case -5:
         return '0 -39px';
+      case -1:
+        return '0 -23px';
       case -2:
       case -3:
         return '-16px -39px';
       case -4:
         return '-64px -39px';
-      case -1:
-        return '0 -23px';
+      case 1:
+        return '-16px -23px';
+      case 2:
+        return '-32px -23px';
+      case 3:
+        return '-48px -23px';
+      case 4:
+        return '-64px -23px';
+      case 5:
+        return '-80px -23px';
+      case 6:
+        return '-96px -23px';
+      case 7:
+        return '-112px -23px';
+      case 8:
+        return '-128px -23px';
     }
   }};
   text-indent: -9999px; // text 숨기기
   width: 16px;
   height: 16px;
+  &:active {
+    background-position: ${({ currentCell }) => {
+      switch (currentCell) {
+        case 0:
+        case -5:
+          return '0 -23px';
+      }
+    }};
+  }
   /* border: 1px solid white; */
 `;
