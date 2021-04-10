@@ -98,7 +98,7 @@ const StyledTd = styled.div<StyleProps>`
       case 0:
         return '0 -39px';
       case -5:
-        return '50px -39px';
+        return '48px -39px';
       case -1:
         return '0 -23px';
       case -2:
