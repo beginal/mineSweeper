@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Header from 'components/Header';
 import Table from 'components/Table';
@@ -6,6 +6,7 @@ import { Helmet } from 'react-helmet';
 import Note from 'components/Note';
 
 function App() {
+  let timer: any = null;
   return (
     <>
       <Helmet>
@@ -13,8 +14,8 @@ function App() {
       </Helmet>
       <StyledWrap>
         <div>
-          <Header />
-          <Table />
+          <Header timer={timer} />
+          <Table timer={timer} />
         </div>
       </StyledWrap>
       <Note />
@@ -26,7 +27,7 @@ export default App;
 
 const StyledWrap = styled.div`
   display: flex;
-  justify-content: center;
+  /* justify-content: center; */
   > div {
     padding: 6px;
     border: 2px solid white;

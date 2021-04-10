@@ -3,10 +3,15 @@ import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { actionCreator } from 'redux/mineReducer';
 import { RootState } from 'redux/store';
+import { IndexType } from 'typescript';
 
-interface Props {}
+interface Props {
+  tableData: number[][];
+  row: number;
+  cell: number;
+}
 
-const Td = ({ tableData, row, cell }: any) => {
+const Td = ({ tableData, row, cell }: Props) => {
   const dispatch = useDispatch();
   const { isStart, gameOver } = useSelector((state: RootState) => state.MineReducer);
   const { SwitchStart, MineInstall, ChangeTableCell, SetGameOver } = actionCreator;
@@ -49,7 +54,7 @@ const Td = ({ tableData, row, cell }: any) => {
     }
   };
 
-  const handleRightClick = (e: any) => {
+  const handleRightClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
     switch (tableData[row][cell]) {
       case isState.flag:
@@ -69,31 +74,10 @@ const Td = ({ tableData, row, cell }: any) => {
     }
   };
 
-  const mouseEvnet = (e: any) => {
-    if (!gameOver) {
-      if (e.button === 0) {
-        if (e.type === 'mousedown') {
-          e.target.style.backgroundPosition = '0 -23px';
-        } else if (e.type === 'mouseup') {
-          e.target.style.backgroundPosition = '';
-          handleClick();
-        }
-      } else if (e.button === 1) {
-        if (e.type === 'mousedown') {
-          e.target.style.backgroundPosition = '0 -23px';
-        } else if (e.type === 'mouseup') {
-          e.target.style.backgroundPosition = '';
-        }
-      }
-    }
-  };
-
   return (
     <StyledTd
       currentCell={tableData[row][cell]}
       onClick={handleClick}
-      onMouseDown={mouseEvnet}
-      onMouseUp={mouseEvnet}
       onContextMenu={handleRightClick}
     >
       {tableData[row][cell]}
@@ -112,8 +96,9 @@ const StyledTd = styled.div<StyleProps>`
   background-position: ${({ currentCell }) => {
     switch (currentCell) {
       case 0:
-      case -5:
         return '0 -39px';
+      case -5:
+        return '50px -39px';
       case -1:
         return '0 -23px';
       case -2:

@@ -4,25 +4,30 @@ import { useDispatch, useSelector } from 'react-redux';
 import { actionCreator } from 'redux/mineReducer';
 import { RootState } from 'redux/store';
 
-interface Props {}
+interface Props {
+  timer: any;
+}
 
-const Header = (props: Props) => {
+const Header = ({ timer }: Props) => {
   const [timeUp, setTimeUp] = useState(0);
-
   const dispatch = useDispatch();
-  const { isStart, mineCount, gameOver } = useSelector((state: RootState) => state.MineReducer);
+  const { isStart, mineCount, gameOver, victory } = useSelector(
+    (state: RootState) => state.MineReducer,
+  );
   const { CreateTable, SwitchStart, SetGameOver } = actionCreator;
 
-  let timer: any = null;
   useEffect(() => {
     if (isStart) {
       timer = setInterval(() => {
-        setTimeUp(prev => prev + 1);
+        setTimeUp((prev: number) => prev + 1);
       }, 1000);
     } else {
       clearInterval(timer);
     }
     if (timeUp === 999) {
+      clearInterval(timer);
+    }
+    if (victory) {
       clearInterval(timer);
     }
     return () => {

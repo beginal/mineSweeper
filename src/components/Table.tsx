@@ -5,11 +5,13 @@ import { actionCreator } from 'redux/mineReducer';
 import { RootState } from 'redux/store';
 import Tr from './Tr';
 
-interface Props {}
+interface Props {
+  timer: any;
+}
 
-const Table = (props: Props) => {
+const Table = ({ timer }: Props) => {
   const dispatch = useDispatch();
-  const { tableData } = useSelector((state: RootState) => state.MineReducer);
+  const { tableData, victory } = useSelector((state: RootState) => state.MineReducer);
   const { CreateTable } = actionCreator;
 
   useEffect(() => {
@@ -21,9 +23,15 @@ const Table = (props: Props) => {
     );
   }, []);
 
+  useEffect(() => {
+    if (victory) {
+      alert('승리하셨습니다!');
+    }
+  }, [victory]);
+
   return (
     <StyledWrap>
-      {tableData.map((tr: any, i: any) => (
+      {tableData.map((tr: number[], i: number) => (
         <Tr key={i} tableData={tableData} trData={tr} row={i} />
       ))}
     </StyledWrap>
